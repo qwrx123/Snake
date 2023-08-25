@@ -53,6 +53,9 @@ private:
     int clickableSize;
     scene::screen whenChange;
     bool gamePaused;
+    bool willDelete;
+    mySettings settings;
+    game* snakeGame;
 public:
     scene(HWND hwnd);
     ~scene();

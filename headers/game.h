@@ -5,7 +5,7 @@
 
 #include "block.h"
 #include "textBox.h"
-
+#include "snakeBlock.h"
 #include "helpers.h"
 #include "time.h"
 
@@ -44,9 +44,29 @@ struct gameMetrics
 	wchar_t linesText[10];
 };
 private:
+int blocksWidth;
+int blocksHeight;
+snakeBlock* renderScreenBlocks[25][25];
 static const block::location gameSquareBoundary;
+RECT currentScreenSize;
+Time countTime;
+float count;
+bool keys[0xffff];
+POINT head;
+POINT tail;
+float speed;
+bool dead;
 public:
-game();
+game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, int width, int height, float speed);
 ~game();
-
+void render();
+void gameLoop();
+void keyDown(wchar_t inputChar);
+void onKey(wchar_t inputChar);
+void resize(RECT newScreen);
+bool testDeath();
+private:
+void moveSnake();
+void checkBoundaries();
+void calculateApple();
 };

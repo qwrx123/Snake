@@ -15,12 +15,13 @@ clickableTextBox leftSelect;
 clickableTextBox rightSelect;
 int currentInt;
 int maxInt;
+int minInt;
 int numDigets;
 int* outNumber;
 wchar_t* currentIntString;
 public:
 selectingTextButton(ID2D1HwndRenderTarget* renderTarget, block::location setLocation, RECT screenSize, 
-    IDWriteFactory* pDWriteFactory, const wchar_t myText[], int startingInt, int maxInt, int* trackInt, block::style myStyle = block::style::boarder);
+    IDWriteFactory* pDWriteFactory, const wchar_t myText[], int startingInt, int minInt, int maxInt, int* trackInt, block::style myStyle = block::style::boarder);
 ~selectingTextButton();
 virtual bool render();
 virtual bool resize(RECT newScreen);
