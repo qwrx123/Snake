@@ -38,12 +38,16 @@ struct gameMetrics
 	wchar_t name[20];
 	int score;
 	wchar_t scoreText[10];
-	int level;
-	wchar_t levelText[10];
-	int lines;
-	wchar_t linesText[10];
+	int time;
+	wchar_t timeText[10];
 };
 private:
+textBox scoreLabel;
+textBox scoreDisplay;
+textBox timeLabel;
+textBox timeDisplay;
+gameMetrics currentMetrics;
+float runningTime;
 int blocksWidth;
 int blocksHeight;
 snakeBlock* renderScreenBlocks[25][25];
@@ -54,6 +58,8 @@ float count;
 bool keys[0xffff];
 POINT head;
 POINT tail;
+int snakeSize;
+int numApples;
 float speed;
 bool dead;
 public:
