@@ -26,6 +26,7 @@ public:
         Title,
         Game,
         Death,
+        win,
         Control,
         Pause
     };
@@ -56,6 +57,7 @@ private:
     bool willDelete;
     mySettings settings;
     game* snakeGame;
+    game::gameMetrics currentMetrics;
 public:
     scene(HWND hwnd);
     ~scene();

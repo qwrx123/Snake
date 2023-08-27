@@ -62,8 +62,9 @@ int snakeSize;
 int numApples;
 float speed;
 bool dead;
+bool win;
 public:
-game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, int width, int height, float speed);
+game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, float speed);
 ~game();
 void render();
 void gameLoop();
@@ -71,6 +72,9 @@ void keyDown(wchar_t inputChar);
 void onKey(wchar_t inputChar);
 void resize(RECT newScreen);
 bool testDeath();
+bool testWin();
+void resetDeltaTime();
+void populateMetrics(game::gameMetrics& populatedMetrics);
 private:
 void moveSnake();
 void checkBoundaries();

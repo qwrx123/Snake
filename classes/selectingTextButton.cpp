@@ -64,7 +64,11 @@ void selectingTextButton::onClick(D2D1_POINT_2F clicked)
 	}
 	if (rightSelect.parseClick())
 	{
-		currentInt = ++currentInt%(maxInt-minInt+1);
+		currentInt = ++currentInt%(maxInt+1);
+		if (currentInt < minInt)
+		{
+			currentInt = minInt;
+		}
 	}
 	if (currentInt < minInt)
 	{

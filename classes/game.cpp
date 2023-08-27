@@ -3,13 +3,14 @@
 
 const block::location game::gameSquareBoundary = {0.21, 0.3, 0.4, 0.74};
 
-game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, int width, int height, float speed)
-	:count(0), blocksWidth(width), blocksHeight(height), speed(speed), dead(false), snakeSize(0), numApples(0),
+game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, float speed)
+	:count(0), blocksWidth(width), blocksHeight(height), speed(speed), dead(false), win(false), snakeSize(0), numApples(0), runningTime(0),
 	scoreLabel(renderTarget, {0.55, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Score"), 
     scoreDisplay(renderTarget, {0.6, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
 	timeLabel(renderTarget, {0.65, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Time"), 
     timeDisplay(renderTarget, {0.7, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0")
 {
+	wcsncpy(currentMetrics.name, playerName, 20);
 	for (int i = 0; i < blocksWidth; i++)
 	{
 		for(int j = 0; j < blocksHeight; j++)
@@ -91,7 +92,23 @@ void game::render()
 
 bool game::testDeath()
 {
-	return false;
+	return dead;
+}
+
+bool game::testWin()
+{
+	return win;
+}
+
+void game::resetDeltaTime()
+{
+	countTime.calculateDeltaTime();
+	countTime.calculateDeltaTime();
+}
+
+void game::populateMetrics(game::gameMetrics& populatedMetrics)
+{
+	populatedMetrics = currentMetrics;
 }
 
 void game::resize(RECT newScreen)
@@ -156,6 +173,10 @@ void game::moveSnake()
 		renderScreenBlocks[tail.x][tail.y]->setTail();
 		snakeSize++;
 		currentMetrics.score++;
+		if (snakeSize == blocksWidth * blocksHeight)
+		{
+			win = true;
+		}
 		helper::intToText(currentMetrics.scoreText, 9, currentMetrics.score);
 		scoreDisplay.changeText(currentMetrics.scoreText);
 		numApples--;

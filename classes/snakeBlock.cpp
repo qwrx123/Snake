@@ -242,7 +242,7 @@ void snakeBlock::setLines()
 
 bool snakeBlock::testSnake()
 {
-	return currentState == state::snake;
+	return currentState == state::snake || currentState == state::head || currentState == state::tail;
 }
 
 bool snakeBlock::testApple()
