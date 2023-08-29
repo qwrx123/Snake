@@ -4,13 +4,13 @@
 const float game::floatSpeeds[game::speeds::numSpeeds] = {0.18, 0.135, 0.090};
 const block::location game::gameSquareBoundary = {0.21, 0.3, 0.4, 0.74};
 
-game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed)
+game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed, songManager& effectGenerator)
 	:count(0), blocksWidth(width), blocksHeight(height), speed(floatSpeeds[currentSpeed]), dead(false), win(false), snakeSize(0), numApples(0), runningTime(0),
 	scoreLabel(renderTarget, {0.05, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Score"), 
     scoreDisplay(renderTarget, {0.1, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
 	timeLabel(renderTarget, {0.05, 0.8, 0.15, 0.05}, screenSize, pDWriteFactory, L"Time"), 
     timeDisplay(renderTarget, {0.1, 0.8, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
-	nextDirection(snakeBlock::direction::invalid), hasTurned(false)
+	nextDirection(snakeBlock::direction::invalid), hasTurned(false), effectGenerator(std::move(effectGenerator))
 {
 	wcsncpy(currentMetrics.name, playerName, 20);
 	for (int i = 0; i < blocksWidth; i++)
@@ -211,6 +211,7 @@ void game::moveSnake()
 	if (renderScreenBlocks[head.x][head.y]->testApple())
 	{
 		eaten = true;
+		effectGenerator.playEffectSound();
 		renderScreenBlocks[head.x][head.y]->eatApple();
 		renderScreenBlocks[tail.x][tail.y]->setSnake();
 		renderScreenBlocks[tail.x][tail.y]->moveBackward(tail);

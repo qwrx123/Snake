@@ -74,8 +74,9 @@ bool hasTurned;
 float speed;
 bool dead;
 bool win;
+songManager effectGenerator;
 public:
-game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed);
+game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed, songManager& effectGenerator);
 ~game();
 void render();
 void gameLoop();

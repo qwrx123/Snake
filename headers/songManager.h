@@ -39,11 +39,7 @@ struct waveFile {
 	int Subchunk2Size;
 };
 LPDIRECTSOUND8 lpDevice;
-LPDIRECTSOUNDBUFFER8 ptitleSongBuffer = NULL;
-LPDIRECTSOUNDBUFFER8 pgameSongBuffers[3];
-LPDIRECTSOUNDBUFFER8 pdeathSongBuffer = NULL;
-LPDIRECTSOUNDBUFFER8 ppieceFallBuffer = NULL;
-LPDIRECTSOUNDBUFFER8 pcurrentGameSong = NULL;
+LPDIRECTSOUNDBUFFER8 pappleEatBuffer = NULL;
 int musicVolume;
 int effectVolume;
 public:

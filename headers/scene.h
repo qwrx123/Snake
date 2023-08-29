@@ -57,6 +57,7 @@ private:
     game::gameMetrics currentMetrics;
     game::leaderboard currentLeaderboard[5];
     int leaderboardDisplay;
+    songManager manageSongs;
 public:
     scene(HWND hwnd);
     ~scene();
