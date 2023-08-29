@@ -16,7 +16,7 @@ SnakeWindow::SnakeWindow()
 
 SnakeWindow::~SnakeWindow()
 {
-	
+	delete myScene;
 }
 
 LRESULT SnakeWindow::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)

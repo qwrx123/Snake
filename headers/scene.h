@@ -33,12 +33,8 @@ public:
 
     struct mySettings {
         int version;
-        wchar_t soundVolumeT[5];
-        int soundVolume;
-        wchar_t effectVolumeT[5];
         int effectVolume;
-        wchar_t startLevelT[10];
-        int startLevel;
+        int boardSize;
         game::speeds gameSpeed;
         wchar_t name[20];
     };
@@ -48,6 +44,7 @@ private:
     IDWriteFactory* pDWriteFactory;
     ID2D1HwndRenderTarget* pRenderTarget;
     block** renderables;
+    int settingVersion;
     int playerNameSize = 20;
     int renderSize;
     clickableTextBox** clickables;
