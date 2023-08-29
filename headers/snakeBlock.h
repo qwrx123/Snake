@@ -45,7 +45,7 @@ void setTail();
 void killSnake();
 void setApple();
 void eatApple();
-void setDirection(snakeBlock::direction newDirection);
+bool setDirection(snakeBlock::direction newDirection);
 bool testSnake();
 bool testApple();
 snakeBlock::direction getDirection();

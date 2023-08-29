@@ -90,14 +90,15 @@ void snakeBlock::eatApple()
 	block::changeColor(block::colors::white);
 }
 
-void snakeBlock::setDirection(snakeBlock::direction newDirection)
+bool snakeBlock::setDirection(snakeBlock::direction newDirection)
 {
 	if (newDirection == backward)
 	{
-		return;
+		return false;
 	}
 	forward = newDirection;
 	setLines();
+	return true;
 }
 
 snakeBlock::direction snakeBlock::getDirection()

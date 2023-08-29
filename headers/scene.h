@@ -39,7 +39,7 @@ public:
         int effectVolume;
         wchar_t startLevelT[10];
         int startLevel;
-        int songChoice;
+        game::speeds gameSpeed;
         wchar_t name[20];
     };
 private:
@@ -58,6 +58,8 @@ private:
     mySettings settings;
     game* snakeGame;
     game::gameMetrics currentMetrics;
+    game::leaderboard currentLeaderboard[5];
+    int leaderboardDisplay;
 public:
     scene(HWND hwnd);
     ~scene();
@@ -73,4 +75,10 @@ public:
     void keyUp(wchar_t inputChar);
     void checkScene();
 private:
+    void calculateLeaderboard();
+    void saveLeaderboard();
+    void deleteLeaderboard();
+    void initializeLeaderboard();
+    void initializeSettings();
+    void saveSettings();
 };

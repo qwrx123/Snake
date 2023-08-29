@@ -1,14 +1,16 @@
 #include "../headers/game.h"
 #include "../headers/scene.h"
 
+const float game::floatSpeeds[game::speeds::numSpeeds] = {0.18, 0.135, 0.090};
 const block::location game::gameSquareBoundary = {0.21, 0.3, 0.4, 0.74};
 
-game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, float speed)
-	:count(0), blocksWidth(width), blocksHeight(height), speed(speed), dead(false), win(false), snakeSize(0), numApples(0), runningTime(0),
-	scoreLabel(renderTarget, {0.55, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Score"), 
-    scoreDisplay(renderTarget, {0.6, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
-	timeLabel(renderTarget, {0.65, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Time"), 
-    timeDisplay(renderTarget, {0.7, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0")
+game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed)
+	:count(0), blocksWidth(width), blocksHeight(height), speed(floatSpeeds[currentSpeed]), dead(false), win(false), snakeSize(0), numApples(0), runningTime(0),
+	scoreLabel(renderTarget, {0.05, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"Score"), 
+    scoreDisplay(renderTarget, {0.1, 0.05, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
+	timeLabel(renderTarget, {0.05, 0.8, 0.15, 0.05}, screenSize, pDWriteFactory, L"Time"), 
+    timeDisplay(renderTarget, {0.1, 0.8, 0.15, 0.05}, screenSize, pDWriteFactory, L"0"),
+	nextDirection(snakeBlock::direction::invalid), hasTurned(false)
 {
 	wcsncpy(currentMetrics.name, playerName, 20);
 	for (int i = 0; i < blocksWidth; i++)
@@ -18,7 +20,10 @@ game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, 
 			renderScreenBlocks[i][j] = new snakeBlock(renderTarget, {0.1, 0.1, 0.1, 0.1}, screenSize);
 		}
 	}
-
+	for (int i = 0; i < 0xffff; i++)
+	{
+		keys[i] = false;
+	}
 	renderScreenBlocks[0][blocksHeight/2]->setTail(snakeBlock::direction::right);
 	renderScreenBlocks[1][blocksHeight/2]->setSnake(snakeBlock::direction::right);
 	renderScreenBlocks[2][blocksHeight/2]->setSnake(snakeBlock::direction::right);
@@ -28,8 +33,11 @@ game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, 
 	helper::intToText(currentMetrics.scoreText, 9, currentMetrics.score);
 	currentMetrics.time = 0;
 	helper::intToText(currentMetrics.timeText, 9, currentMetrics.time);
-	calculateApple();
-
+	currentMetrics.speed = currentSpeed;
+	for (int i = 0; i < 1; i++)
+	{
+		calculateApple();
+	}
 	head = {3, blocksHeight/2};
 	tail = {0, blocksHeight/2};
 }
@@ -53,19 +61,55 @@ void game::gameLoop()
 
 	if (keys[L'W'] || keys[VK_UP])
 	{
-		renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::up);
+		if (hasTurned)
+		{
+			nextDirection = snakeBlock::direction::up;
+		}
+		else if (renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::up))
+		{
+			hasTurned = true;
+		}
+		keys[L'W'] = false;
+		keys[VK_UP] = false;
 	}
 	if (keys[L'D'] || keys[VK_RIGHT])
 	{
-		renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::right);
+		if (hasTurned)
+		{
+			nextDirection = snakeBlock::direction::right;
+		}
+		else if (renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::right))
+		{
+			hasTurned = true;
+		}
+		keys[L'D'] = false;
+		keys[VK_RIGHT] = false;
 	}
 	if (keys[L'S'] || keys[VK_DOWN])
 	{
-		renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::down);
+		if (hasTurned)
+		{
+			nextDirection = snakeBlock::direction::down;
+		}
+		else if (renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::down))
+		{
+			hasTurned = true;
+		}
+		keys[L'S'] = false;
+		keys[VK_DOWN] = false;
 	}
 	if (keys[L'A'] || keys[VK_LEFT])
 	{
-		renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::left);
+		if (hasTurned)
+		{
+			nextDirection = snakeBlock::direction::left;
+		}
+		else if (renderScreenBlocks[head.x][head.y]->setDirection(snakeBlock::direction::left))
+		{
+			hasTurned = true;
+		}
+		keys[L'A'] = false;
+		keys[VK_LEFT] = false;
 	}
 	if ((int)runningTime > currentMetrics.time)
 	{
@@ -180,8 +224,15 @@ void game::moveSnake()
 		helper::intToText(currentMetrics.scoreText, 9, currentMetrics.score);
 		scoreDisplay.changeText(currentMetrics.scoreText);
 		numApples--;
+
 	}
 	renderScreenBlocks[head.x][head.y]->setHead(currentDirection);
+	if (nextDirection != snakeBlock::direction::invalid)
+	{
+		renderScreenBlocks[head.x][head.y]->setDirection(nextDirection);
+		nextDirection = snakeBlock::direction::invalid;
+	}
+	hasTurned = false;
 	if (eaten)
 	{
 		calculateApple();

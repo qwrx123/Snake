@@ -29,9 +29,16 @@ struct ghostBlocks {
 	int type = 15;
 };
 struct leaderboard {
-	wchar_t name[20];
-	int score;
-	wchar_t scoreText[10];
+	wchar_t name[3][20];
+	int score[3];
+	wchar_t scoreText[3][10];
+};
+enum speeds
+{
+	slow,
+	medium,
+	fast,
+	numSpeeds
 };
 struct gameMetrics
 {
@@ -40,7 +47,9 @@ struct gameMetrics
 	wchar_t scoreText[10];
 	int time;
 	wchar_t timeText[10];
+	speeds speed;
 };
+static const float floatSpeeds[numSpeeds];
 private:
 textBox scoreLabel;
 textBox scoreDisplay;
@@ -60,11 +69,13 @@ POINT head;
 POINT tail;
 int snakeSize;
 int numApples;
+snakeBlock::direction nextDirection;
+bool hasTurned;
 float speed;
 bool dead;
 bool win;
 public:
-game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, float speed);
+game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, RECT screenSize, wchar_t playerName[20], int width, int height, game::speeds currentSpeed);
 ~game();
 void render();
 void gameLoop();
