@@ -44,7 +44,13 @@ game::game(ID2D1HwndRenderTarget* renderTarget, IDWriteFactory* pDWriteFactory, 
 
 game::~game()
 {
-
+	for (int i = 0; i < blocksWidth; i++)
+	{
+		for(int j = 0; j < blocksHeight; j++)
+		{
+            delete renderScreenBlocks[i][j];
+        }
+    }
 }
 
 void game::gameLoop()
